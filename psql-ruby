@@ -1,0 +1,40 @@
+#!/usr/bin/ruby
+
+require 'pg'
+
+puts 'Version of libpg: ' + PG.library_version.to_s
+
+begin
+
+    con = PG.connect :dbname => 'arteshdb', :user => 'root'#, 
+#        :password => 'bydbd'
+
+    user = con.user
+    db_name = con.db
+    pswd = con.pass
+    
+    puts "User: #{user}"
+    puts "Database name: #{db_name}"
+#    puts "Password: #{pswd}" 
+
+	con.exec "DROP TABLE IF EXISTS cach"
+    con.exec "CREATE TABLE cach(Id INTEGER PRIMARY KEY, 
+        ip VARCHAR(50), port INT)"
+    con.exec "INSERT INTO cach VALUES(1,'0.0.0.0',52642)"
+
+	rs = con.exec "SELECT * FROM cach LIMIT 5"
+
+    rs.each do |row|
+      puts "%s %s %s" % [ row['id'], row['ip'], row['port'] ]
+    end
+    
+    
+rescue PG::Error => e
+
+    puts e.message 
+    
+ensure
+
+    con.close if con
+    
+end
