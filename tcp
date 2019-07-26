@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+require 'socket'
+
+server = TCPServer.open(1025)
+loop do
+
+client = server.accept
+client.puts "HTTP/1.1 200 OK\r\n"
+client.puts "Content-type: text/plain\r\n"
+client.puts "\r\n"
+client.puts "LOLZ"
+client.close
+
+end
